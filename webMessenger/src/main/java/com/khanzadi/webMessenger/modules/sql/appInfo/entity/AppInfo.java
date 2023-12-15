@@ -1,12 +1,14 @@
-package com.khanzadi.webMessenger.modules.sql.contacts.entity;
+package com.khanzadi.webMessenger.modules.sql.appInfo.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Data
@@ -14,27 +16,15 @@ import java.util.List;
 @NoArgsConstructor
 @RequiredArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-public class UsersModel {
+public class AppInfo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private String uuid;
-
-    private String firstName;
-    private String lastName;
-    private String profileImage; //Path Profile
-    private String cellPhone;
-    private String email;
-    private String profileName;
-    private String password;
-    private Boolean isVerified_email;
-    private Boolean isVerified_cellPhone;
-    private String userStatus; //Enum UserStatus
-    private Boolean enabled; //user Active on NotActive
-
-    @ManyToMany
-    private List<UsersModel> contacts;
+    private String appName;
+    private String appVersion;
+    private String developerName;
+    private String createdDate;
 
     @Column(
             name = "created_time",
