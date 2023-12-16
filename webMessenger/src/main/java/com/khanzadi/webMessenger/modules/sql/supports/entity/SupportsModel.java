@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -30,10 +32,12 @@ public class SupportsModel {
             name = "created_time",
             updatable = false
     )
+    @CreationTimestamp
     private LocalDateTime createdAt;
     @Column(
             name = "updated_time",
             updatable = true
     )
+    @UpdateTimestamp
     private LocalDateTime updatedAt;
 }

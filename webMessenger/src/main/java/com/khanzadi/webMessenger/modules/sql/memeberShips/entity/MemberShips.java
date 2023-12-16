@@ -1,9 +1,15 @@
-package com.khanzadi.webMessenger.modules.sql.contacts.entity;
+package com.khanzadi.webMessenger.modules.sql.memeberShips.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.khanzadi.webMessenger.modules.sql.contacts.entity.UsersModel;
+import com.khanzadi.webMessenger.modules.sql.groups.entity.GroupsModel;
+import com.khanzadi.webMessenger.modules.sql.roles.entity.RolesModel;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -16,27 +22,23 @@ import java.util.List;
 @NoArgsConstructor
 @RequiredArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-public class UsersModel {
+public class MemberShips {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private String uuid;
+    private long userInviterToGroupId;
+    private Boolean enabled;
 
-    private String firstName;
-    private String lastName;
-    private String profileImage; //Path Profile
-    private String cellPhone;
-    private String email;
-    private String profileName;
-    private String password;
-    private Boolean isVerified_email;
-    private Boolean isVerified_cellPhone;
-    private String userStatus; //Enum UserStatus
-    private Boolean enabled; //user Active on NotActive
+    @ManyToOne
+    private UsersModel member;
+
+    @ManyToOne
+    private GroupsModel group;
 
     @ManyToMany
-    private List<UsersModel> contacts;
+    private List<RolesModel> roles;
 
     @Column(
             name = "created_time",

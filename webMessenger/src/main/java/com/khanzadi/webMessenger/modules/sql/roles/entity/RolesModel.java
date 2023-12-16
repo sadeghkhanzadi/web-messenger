@@ -1,9 +1,13 @@
-package com.khanzadi.webMessenger.modules.sql.contacts.entity;
+package com.khanzadi.webMessenger.modules.sql.roles.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.khanzadi.webMessenger.modules.sql.operations.entity.OperationsModel;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -16,27 +20,15 @@ import java.util.List;
 @NoArgsConstructor
 @RequiredArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-public class UsersModel {
+public class RolesModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    private String uuid;
-
-    private String firstName;
-    private String lastName;
-    private String profileImage; //Path Profile
-    private String cellPhone;
-    private String email;
-    private String profileName;
-    private String password;
-    private Boolean isVerified_email;
-    private Boolean isVerified_cellPhone;
-    private String userStatus; //Enum UserStatus
-    private Boolean enabled; //user Active on NotActive
-
+    private String roleName;
+    private Boolean enabled;
     @ManyToMany
-    private List<UsersModel> contacts;
+    private List<OperationsModel> operations;
 
     @Column(
             name = "created_time",
