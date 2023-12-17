@@ -5,6 +5,7 @@ import com.khanzadi.dto.Users.UsersDto;
 import com.khanzadi.enums.IdentityType;
 import com.khanzadi.exeption.MessengerException;
 import com.khanzadi.utils.StringUtils;
+import com.khanzadi.utils.VerifyObjectUtils;
 import com.khanzadi.webMessenger.modules.sql.users.DAO.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,65 +22,64 @@ public class UsersBusiness {
 
     //registerUser
     public ResultsServiceDto registerUser(String identity, IdentityType identityType, UsersDto usersDto) throws MessengerException {
-        //Todo Checked Object
-        StringUtils.requireNonNull(identity , "identity");
-        StringUtils.requireNonNull(identityType , "identityType");
         boolean identityIsText  = StringUtils.hasText(identity);
         if (!identityIsText){
             throw new MessengerException("Identity is null Or Empty " + "identity: " + identity);
         }
 
-        ResultsServiceDto serviceDto = findUser(identity , identityType);
-        if (serviceDto != null){
-            if (serviceDto.getResult() instanceof UsersDto ud){
-                throw new MessengerException("User is Exists in DB - userId is :" + ud.getId());
-            }
+        VerifyObjectUtils.isNewUsers(usersDto);
+        VerifyObjectUtils.requireNonNull(identity , "identity");
+        VerifyObjectUtils.requireNonNull(identityType , "identityType");
+
+        UsersDto userDto = findUserDto(identity , identityType);
+        if (userDto != null){
+            throw new MessengerException("User is Exists in DB - userId is :" + userDto.getId());
         }
+
         UsersDto dto = this.dao.insertUser(UsersDto.convertToEntity(usersDto));
         return new ResultsServiceDto(dto);
     }
     //deleteUser
-    public ResultsServiceDto deleteUser(String identity , IdentityType identityType , UsersDto usersDto) throws MessengerException {
-        if (!identity.isEmpty() && !identity.isBlank()) {
-            ResultsServiceDto dto = new ResultsServiceDto();
-            switch (identityType) {
-                case ID -> {
-                    this.dao.deleteOneUserById(Long.valueOf(identity));
-                    dto = new ResultsServiceDto("identity: " + identity + " deleted");
-                }
-                case EMAIL -> {
-                    //todo
-                }
-                case USER_NAME -> {
-                    this.dao.deleteOneUserByUsername(identity);
-                    dto = new ResultsServiceDto("identity: " + identity + " deleted");
-                }
-                case PHONE_NUMBER -> {
-                    this.dao.deleteOneUserByCellPhone(identity);
-                    dto = new ResultsServiceDto("identity: " + identity + " deleted");
-                }
-                default -> {
-                    throw new MessengerException("IdentityType is Not valid or Empty " + "identityType: " + identityType);
-                }
-            }
-            return dto;
-        } else {
-            throw new MessengerException("Identity is null Or Empty " + "identity: " + identity);
-        }
-    }
-    //editUser
-    public ResultsServiceDto editUser(String identity , IdentityType identityType , UsersDto usersDto) throws MessengerException {
-        UsersDto dto = this.dao.editUser(UsersDto.convertToEntity(usersDto));
-        return new ResultsServiceDto(dto);
-    }
-    //findUser
-    public ResultsServiceDto findUser(String identity , IdentityType identityType) throws MessengerException {
-        StringUtils.requireNonNull(identity , "identity");
-        StringUtils.requireNonNull(identityType , "identityType");
+    public ResultsServiceDto deleteUser(String identity , IdentityType identityType) throws MessengerException {
         boolean identityIsText  = StringUtils.hasText(identity);
         if (!identityIsText){
             throw new MessengerException("Identity is null Or Empty " + "identity: " + identity);
         }
+
+        VerifyObjectUtils.requireNonNull(identity , "identity");
+        VerifyObjectUtils.requireNonNull(identityType , "identityType");
+
+        UsersDto userDto = findUserDto(identity , identityType);
+        this.dao.deleteOneUserById(userDto.getId());
+        return new ResultsServiceDto("identity: " + identity + " deleted");
+    }
+    //editUser
+    public ResultsServiceDto editUser(String identity , IdentityType identityType , UsersDto usersDto) throws MessengerException {
+        boolean identityIsText  = StringUtils.hasText(identity);
+        if (!identityIsText){
+            throw new MessengerException("Identity is null Or Empty " + "identity: " + identity);
+        }
+
+        VerifyObjectUtils.isNewUsers(usersDto);
+        VerifyObjectUtils.requireNonNull(identity , "identity");
+        VerifyObjectUtils.requireNonNull(identityType , "identityType");
+
+        UsersDto userDto = findUserDto(identity , identityType);
+        if (userDto == null) {
+            throw new MessengerException("User not Exists Or UserId NotFound");
+        }
+
+        UsersDto dto = this.dao.editUser(UsersDto.convertToEntity(userDto));
+        return new ResultsServiceDto(dto);
+    }
+    //findUser
+    public ResultsServiceDto findUser(String identity , IdentityType identityType) throws MessengerException {
+        boolean identityIsText  = StringUtils.hasText(identity);
+        if (!identityIsText){
+            throw new MessengerException("Identity is null Or Empty " + "identity: " + identity);
+        }
+        VerifyObjectUtils.requireNonNull(identity , "identity");
+        VerifyObjectUtils.requireNonNull(identityType , "identityType");
         ResultsServiceDto dto = new ResultsServiceDto();
         switch (identityType) {
             case ID -> {
@@ -99,6 +99,34 @@ public class UsersBusiness {
             }
         }
         return dto;
+    }
+
+    public UsersDto findUserDto(String identity , IdentityType identityType) throws MessengerException {
+        VerifyObjectUtils.requireNonNull(identity , "identity");
+        VerifyObjectUtils.requireNonNull(identityType , "identityType");
+        boolean identityIsText  = StringUtils.hasText(identity);
+        if (!identityIsText){
+            throw new MessengerException("Identity is null Or Empty " + "identity: " + identity);
+        }
+
+        switch (identityType) {
+            case ID -> {
+                return this.dao.findOneUserById(Long.valueOf(identity));
+            }
+            case EMAIL -> {
+                //todo
+            }
+            case USER_NAME -> {
+                return this.dao.findOneUserByUsername(identity);
+            }
+            case PHONE_NUMBER -> {
+                return this.dao.findOneUserByCellPhone(identity);
+            }
+            default -> {
+                throw new MessengerException("IdentityType is Not valid or Empty " + "identityType: " + identityType);
+            }
+        }
+        return null;
     }
 
     public Boolean isExistsUser(Long id) throws MessengerException {

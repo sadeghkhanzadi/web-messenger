@@ -3,6 +3,7 @@ package com.khanzadi.webMessenger.controlers;
 import com.khanzadi.dto.ResultsServiceDto;
 import com.khanzadi.dto.Users.UsersDto;
 import com.khanzadi.enums.IdentityType;
+import com.khanzadi.exeption.MessengerException;
 import com.khanzadi.webMessenger.modules.sql.users.service.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -22,44 +23,44 @@ public class UsersController {
 
     //registerUser
     @PostMapping(MS_REGISTER_USER)
-    private ResponseEntity<ResultsServiceDto> registerUser(@PathVariable(value = "identity") String identity ,
-                                        @RequestParam(
-                                                   value = "idenityType" ,
-                                                   defaultValue = "PHONE_NUMBER"
-                                           ) IdentityType identityType ,
-                                        @RequestBody UsersDto users) {
+    public ResponseEntity<ResultsServiceDto> registerUser(@PathVariable(value = "identity") String identity ,
+                                                          @RequestParam(
+                                                                  value = "idenityType" ,
+                                                                  defaultValue = "PHONE_NUMBER"
+                                                          ) IdentityType identityType ,
+                                                          @RequestBody UsersDto users) throws MessengerException {
         return ResponseEntity.status(200).body(service.registerUser(identity,identityType,users));
     }
 
     //editUser @FormParam @PathParam
     @PutMapping(MS_EDIT_USER)
-    private ResultsServiceDto editUser(@PathVariable(value = "identity") String identity ,
-                                       @RequestParam(
-                                               value = "idenityType" ,
-                                               defaultValue = "PHONE_NUMBER"
-                                       ) IdentityType identityType ,
-                                       @RequestBody UsersDto users){
-
+    public ResponseEntity<ResultsServiceDto> editUser(@PathVariable(value = "identity") String identity ,
+                                                      @RequestParam(
+                                                              value = "idenityType" ,
+                                                              defaultValue = "PHONE_NUMBER"
+                                                      ) IdentityType identityType ,
+                                                      @RequestBody UsersDto users) throws MessengerException {
+        return ResponseEntity.status(200).body(service.editUser(identity,identityType,users));
     }
 
     //deleteUser @FormParam @PathParam
     @DeleteMapping(MS_DELETE_USER)
-    private ResultsServiceDto deleteUser(@PathVariable(value = "identity") String identity ,
-                                         @RequestParam(
-                                                 value = "idenityType" ,
-                                                 defaultValue = "PHONE_NUMBER"
-                                         ) IdentityType identityType){
-
+    public ResponseEntity<ResultsServiceDto> deleteUser(@PathVariable(value = "identity") String identity ,
+                                                        @RequestParam(
+                                                                value = "idenityType" ,
+                                                                defaultValue = "PHONE_NUMBER"
+                                                        ) IdentityType identityType) throws MessengerException {
+        return ResponseEntity.status(200).body(service.deleteUser(identity,identityType));
     }
 
     //findUser @QueryParam
     @GetMapping(MS_FIND_USER)
-    private ResultsServiceDto findOneUser(@PathVariable(value = "identity") String identity ,
-                                          @RequestParam(
-                                                  value = "idenityType" ,
-                                                  defaultValue = "PHONE_NUMBER"
-                                          ) IdentityType identityType){
-
+    public ResponseEntity<ResultsServiceDto> findOneUser(@PathVariable(value = "identity") String identity ,
+                                                         @RequestParam(
+                                                                 value = "idenityType" ,
+                                                                 defaultValue = "PHONE_NUMBER"
+                                                         ) IdentityType identityType) throws MessengerException {
+        return ResponseEntity.status(200).body(service.findUser(identity,identityType));
     }
 
     //addContact

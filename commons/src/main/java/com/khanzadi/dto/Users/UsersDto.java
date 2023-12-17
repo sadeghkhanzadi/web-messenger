@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class UsersDto {
-    private long id;
+    private Long id;
 
     private String uuid;
 
@@ -27,7 +27,7 @@ public class UsersDto {
     private Boolean enabled; //user Active on NotActive
 
     public static class Builder{
-        private long id;
+        private Long id;
 
         private String uuid;
 
@@ -44,7 +44,7 @@ public class UsersDto {
         private String userStatus; //Enum UserStatus
         private Boolean enabled; //user Active on NotActive
 
-        public Builder id(long id){
+        public Builder id(Long id){
             this.id = id;
             return this;
         }

@@ -71,10 +71,4 @@ public class StringUtils {
         }
         return isDigit;
     }
-
-    public static <T> T requireNonNull(T obj, String entryType) throws MessengerException {
-        if (obj == null || obj == "")
-            throw new MessengerException("Error"+ entryType +"param is Empty");
-        return obj;
-    }
 }

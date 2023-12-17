@@ -20,7 +20,7 @@ import java.util.List;
 public class UsersModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     private String uuid;
 
@@ -54,7 +54,7 @@ public class UsersModel {
     private LocalDateTime updatedAt;
 
     public static class Builder{
-        private long id;
+        private Long id;
 
         private String uuid;
 
@@ -71,7 +71,7 @@ public class UsersModel {
         private String userStatus; //Enum UserStatus
         private Boolean enabled; //user Active on NotActive
 
-        public Builder id(long id){
+        public Builder id(Long id){
             this.id = id;
             return this;
         }
