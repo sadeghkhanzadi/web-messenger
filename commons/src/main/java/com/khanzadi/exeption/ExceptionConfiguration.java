@@ -13,9 +13,9 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import java.util.Date;
 
 @ControllerAdvice
-public class ExeptionConfiguration extends ResponseEntityExceptionHandler {
+public class ExceptionConfiguration extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler({MessengerExp.class})
+    @ExceptionHandler({OauthException.class})
     @ResponseBody
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<ErrorMessage> handleAccessDeniedException(
@@ -30,17 +30,17 @@ public class ExeptionConfiguration extends ResponseEntityExceptionHandler {
     }
 
     @ResponseBody
-    @ExceptionHandler(value = MessengerExp.class)
-    @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
+    @ExceptionHandler(value = MessengerException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<ErrorMessage> serviceUnavailableNotFoundException(
-            MessengerExp ex, WebRequest request) {
+            MessengerException ex, WebRequest request) {
         ErrorMessage message = new ErrorMessage(
-                HttpStatus.SERVICE_UNAVAILABLE.value(),
+                HttpStatus.BAD_REQUEST.value(),
                 new Date(),
                 ex.getMessage(),
                 request.getDescription(false));
         return new ResponseEntity<ErrorMessage>(message, new HttpHeaders() ,
-                HttpStatus.SERVICE_UNAVAILABLE);
+                HttpStatus.BAD_REQUEST);
     }
 
     //try {

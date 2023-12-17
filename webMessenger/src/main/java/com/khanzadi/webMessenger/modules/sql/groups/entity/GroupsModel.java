@@ -2,7 +2,7 @@ package com.khanzadi.webMessenger.modules.sql.groups.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.khanzadi.webMessenger.modules.sql.contacts.entity.UsersModel;
+import com.khanzadi.webMessenger.modules.sql.users.entity.UsersModel;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
