@@ -28,5 +28,5 @@ public class ResultsServiceDto implements Serializable {
         result = ob;
     }
 
-    //TODO Builder
+    //todo Builder
 }
