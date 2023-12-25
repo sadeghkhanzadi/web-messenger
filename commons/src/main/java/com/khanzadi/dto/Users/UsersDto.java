@@ -1,11 +1,15 @@
 package com.khanzadi.dto.Users;
 
+import com.khanzadi.dto.ResultsServiceDto;
 import com.khanzadi.dto.contacts.UserContactsDto;
+import com.khanzadi.enums.IdentityType;
 import com.khanzadi.exeption.MessengerException;
+import com.khanzadi.utils.VerifyObjectUtils;
 import com.khanzadi.webMessenger.modules.sql.users.entity.UsersModel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -15,6 +19,7 @@ import java.util.Objects;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Setter
 public class UsersDto implements Comparable<UsersDto>{
     private Long id;
 
@@ -44,6 +49,57 @@ public class UsersDto implements Comparable<UsersDto>{
             }
             return false;
         } throw new MessengerException("Contacts is Not Exists!");
+    }
+    public UsersDto isExistsByIdentity(String identity , IdentityType identityType) throws MessengerException {
+        VerifyObjectUtils.requireNonNull(identity , "identity");
+        VerifyObjectUtils.requireNonNull(identityType , "identityType");
+        boolean Err = false;
+        UsersDto dto = null;
+        switch (identityType) {
+            case ID -> {
+                for (UsersDto D : contacts){
+                    if (D.getId().equals(Long.valueOf(identity))){
+                        Err =  true;
+                        dto = D;
+                        break;
+                    }
+                }
+            }
+            case EMAIL -> {
+                for (UsersDto D : contacts){
+                    if (D.getEmail().equals(identity)) {
+                        Err = true;
+                        dto = D;
+                        break;
+                    }
+                }
+            }
+            case USER_NAME -> {
+                for (UsersDto D : contacts){
+                    if (D.getUsername().equals(identity)){
+                        Err =  true;
+                        dto = D;
+                        break;
+                    }
+                }
+            }
+            case PHONE_NUMBER -> {
+                for (UsersDto D : contacts){
+                    if (D.getCellPhone().equals(identity)){
+                        Err =  true;
+                        dto = D;
+                        break;
+                    }
+                }
+            }
+            default -> {
+                throw new MessengerException("IdentityType is Not valid or Empty " + "identityType: " + identityType);
+            }
+        }
+        if (dto == null){
+            throw new MessengerException("Contacts is Not Exists!");
+        }
+        return dto;
     }
 
     public List<UsersDto> removeContact(UsersDto usersDto) throws MessengerException {

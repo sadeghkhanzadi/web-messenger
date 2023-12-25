@@ -79,16 +79,8 @@ public class UsersController {
                                                              @RequestBody UserContactsDto contacts) throws MessengerException{
         return ResponseEntity.status(200).body(service.addContactToUserContactList(identity, identityType, contacts));
     }
-    //editeContact
-    @PutMapping(MS_EDIT_CONTACT)
-    public ResponseEntity<ResultsServiceDto> editContactAtUserContactList(@PathVariable(value = "identity") String identity ,
-                                                             @RequestParam(
-                                                                     value = "idenityType" ,
-                                                                     defaultValue = "PHONE_NUMBER"
-                                                             ) IdentityType identityType ,
-                                                             @RequestBody UserContactsDto contacts) throws MessengerException{
-        return ResponseEntity.status(200).body(service.editContactAtUserContactList(identity, identityType, contacts));
-    }
+    //TODO editeContact
+
     //deleteContact
     @DeleteMapping(MS_DELETE_CONTACT)
     public ResponseEntity<ResultsServiceDto> deleteContactAtUserContactList(@PathVariable(value = "identity") String identity ,
@@ -100,8 +92,8 @@ public class UsersController {
                                                              @RequestParam(
                                                                      value = "idenityTypeC" ,
                                                                      defaultValue = "PHONE_NUMBER"
-                                                             ) IdentityType identityTypeC ){
-        return ResponseEntity.status(200).body(service.deleteContactAtUserContactList());
+                                                             ) IdentityType identityTypeC ) throws MessengerException {
+        return ResponseEntity.status(200).body(service.deleteContactAtUserContactList(identity, identityType, identityC , identityTypeC));
     }
     //Find One Contact's user
     @GetMapping(MS_FIND_CONTACT)

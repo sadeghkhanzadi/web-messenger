@@ -131,7 +131,7 @@ public class UserDao {
 
     }
     //deleteContact
-    public Boolean deleteContactAtUserContactList(){
+    public Boolean deleteContactAtUserContactList(UsersModel usersModel){
 
     }
     //Find One Contact's user

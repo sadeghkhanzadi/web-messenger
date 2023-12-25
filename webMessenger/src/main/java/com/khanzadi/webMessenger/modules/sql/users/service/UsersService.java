@@ -40,14 +40,12 @@ public class UsersService {
                                                          UserContactsDto contacts) throws MessengerException {
         return this.business.addContactToUserContactList(identity , identityType, contacts);
     }
-    //editContact
-    public ResultsServiceDto editContactAtUserContactList(String identity , IdentityType identityType,
-                                                          UserContactsDto contacts) throws MessengerException {
-        return this.business.editContactAtUserContactList(identity , identityType, contacts);
-    }
+    // TODO editContact
+
     //deleteContact
-    public ResultsServiceDto deleteContactAtUserContactList(){
-        return this.business.deleteContactAtUserContactList();
+    public ResultsServiceDto deleteContactAtUserContactList(String identity , IdentityType identityType,
+                                                            String identityC , IdentityType identityTypeC) throws MessengerException {
+        return this.business.deleteContactAtUserContactList(identity , identityType , identityC , identityTypeC);
     }
     //Find One Contact's user
     public ResultsServiceDto findContactAtUserContactList(){

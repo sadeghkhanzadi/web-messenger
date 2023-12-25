@@ -8,7 +8,6 @@ import com.khanzadi.exeption.MessengerException;
 import com.khanzadi.utils.StringUtils;
 import com.khanzadi.utils.VerifyObjectUtils;
 import com.khanzadi.webMessenger.modules.sql.users.DAO.UserDao;
-import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +32,7 @@ public class UsersBusiness {
         VerifyObjectUtils.requireNonNull(identity , "identity");
         VerifyObjectUtils.requireNonNull(identityType , "identityType");
 
-        UsersDto userDto = findUserDto(identity , identityType);
+        UsersDto userDto = findUserDtoByIdentity(identity , identityType);
         if (userDto != null){
             throw new MessengerException("User is Exists in DB - userId is :" + userDto.getId());
         }
@@ -51,7 +50,7 @@ public class UsersBusiness {
         VerifyObjectUtils.requireNonNull(identity , "identity");
         VerifyObjectUtils.requireNonNull(identityType , "identityType");
 
-        UsersDto userDto = findUserDto(identity , identityType);
+        UsersDto userDto = findUserDtoByIdentity(identity , identityType);
         this.dao.deleteOneUserById(userDto.getId());
         return new ResultsServiceDto("identity: " + identity + " deleted");
     }
@@ -66,7 +65,7 @@ public class UsersBusiness {
         VerifyObjectUtils.requireNonNull(identity , "identity");
         VerifyObjectUtils.requireNonNull(identityType , "identityType");
 
-        UsersDto userDto = findUserDto(identity , identityType);
+        UsersDto userDto = findUserDtoByIdentity(identity , identityType);
         if (userDto == null) {
             throw new MessengerException("User not Exists Or UserId NotFound");
         }
@@ -103,7 +102,7 @@ public class UsersBusiness {
         return dto;
     }
 
-    public UsersDto findUserDto(String identity , IdentityType identityType) throws MessengerException {
+    public UsersDto findUserDtoByIdentity(String identity , IdentityType identityType) throws MessengerException {
         VerifyObjectUtils.requireNonNull(identity , "identity");
         VerifyObjectUtils.requireNonNull(identityType , "identityType");
         boolean identityIsText  = StringUtils.hasText(identity);
@@ -134,21 +133,19 @@ public class UsersBusiness {
         return dto;
     }
 
-    public UsersDto findUserDto(UserContactsDto contacts) throws MessengerException{
+    public UsersDto findUserDtoByContactsDto(UserContactsDto contacts , IdentityType identityType) throws MessengerException{
         VerifyObjectUtils.isNewContact(contacts);
         UsersDto dto = null;
-        if (contacts.getId() != null){
+        if (contacts.getId() != null && identityType.equals(IdentityType.ID)){
             dto = this.dao.findOneUserById(contacts.getId());
-        } else if (contacts.getEmail() != null){
-            dto = this.dao.findOneUserById(contacts.getId());
-        } else if (contacts.getCellPhone() != null){
-            dto = this.dao.findOneUserById(contacts.getId());
-        } else if (contacts.getUsername() != null){
-            dto = this.dao.findOneUserById(contacts.getId());
-        } else if (contacts.getContactName() != null){
-            dto = this.dao.findOneUserById(contacts.getId());
+        } else if (contacts.getEmail() != null && identityType.equals(IdentityType.EMAIL)){
+            //Todo
+        } else if (contacts.getCellPhone() != null && identityType.equals(IdentityType.PHONE_NUMBER)){
+            dto = this.dao.findOneUserByCellPhone(contacts.getCellPhone());
+        } else if (contacts.getUsername() != null && identityType.equals(IdentityType.USER_NAME)){
+            dto = this.dao.findOneUserByUsername(contacts.getUsername());
         } else {
-          throw new MessengerException("Not Exists Match Fields");
+            throw new MessengerException("Not Exists Match Fields");
         }
         if (dto == null){
             throw new MessengerException("Contacts Not Found");
@@ -176,37 +173,39 @@ public class UsersBusiness {
         VerifyObjectUtils.requireNonNull(identity , "identity");
         VerifyObjectUtils.requireNonNull(identityType , "identityType");
 
-        UsersDto userDto = findUserDto(identity , identityType);
-        UsersDto userContactsDto = findUserDto(contacts);
+        UsersDto userDto = findUserDtoByIdentity(identity , identityType);
+        UsersDto userContactsDto = findUserDtoByContactsDto(contacts , IdentityType.ID);
         userDto.getContacts().add(userContactsDto);
 
         UsersDto dto = this.dao.addContactToUserContactList(UsersDto.convertToEntity(userDto));
         return new ResultsServiceDto(dto);
     }
     //editContact
-    public ResultsServiceDto editContactAtUserContactList(String identity , IdentityType identityType,
-                                                          UserContactsDto contacts) throws MessengerException {
+
+    //deleteContact
+    public ResultsServiceDto deleteContactAtUserContactList(String identity , IdentityType identityType,
+                                                            String identityC , IdentityType identityTypeC) throws MessengerException {
+        VerifyObjectUtils.requireNonNull(identity , "identity");
+        VerifyObjectUtils.requireNonNull(identityType , "identityType");
+        VerifyObjectUtils.requireNonNull(identityC , "identityContact");
+        VerifyObjectUtils.requireNonNull(identityTypeC , "identityTypeContact");
         boolean identityIsText  = StringUtils.hasText(identity);
+        boolean identityCIsText  = StringUtils.hasText(identityC);
         if (!identityIsText){
             throw new MessengerException("Identity is null Or Empty " + "identity: " + identity);
         }
 
-        VerifyObjectUtils.isNewContact(contacts);
-        VerifyObjectUtils.requireNonNull(identity , "identity");
-        VerifyObjectUtils.requireNonNull(identityType , "identityType");
+        if (!identityCIsText){
+            throw new MessengerException("Identity is null Or Empty " + "identityContact: " + identityC);
+        }
 
-        UsersDto userContactsDto = findUserDto(contacts);
-        UsersDto userDto = findUserDto(identity , identityType);
+        UsersDto userDto = findUserDtoByIdentity(identity , identityType);
+        UsersDto userContactsDto = findUserDtoByIdentity(identityC , identityTypeC);
         if (userDto.isExists(userContactsDto)){
             userDto.removeContact(userContactsDto);
         }
-
-        UsersDto dto = this.dao.editContactAtUserContactList(UsersDto.convertToEntity(userDto));
-        return new ResultsServiceDto(dto);
-    }
-    //deleteContact
-    public ResultsServiceDto deleteContactAtUserContactList(){
-
+        Boolean B = this.dao.deleteContactAtUserContactList(UsersDto.convertToEntity(userDto));
+        return new ResultsServiceDto(B);
     }
     //Find One Contact's user
     public ResultsServiceDto findContactAtUserContactList(){
