@@ -1,6 +1,7 @@
 package com.khanzadi.utils;
 
 import com.khanzadi.dto.Users.UsersDto;
+import com.khanzadi.dto.contacts.UserContactsDto;
 import com.khanzadi.exeption.MessengerException;
 
 public class VerifyObjectUtils {
@@ -14,5 +15,12 @@ public class VerifyObjectUtils {
         if (dto != null){
             return StringUtils.isNullOrEmpty(String.valueOf(dto.getId()!= null ? dto.getId() : null));
         } throw new MessengerException("Json Users Model is null");
+    }
+
+
+    public static <T> boolean isNewContact(UserContactsDto dto) throws MessengerException {
+        if (dto != null){
+            return StringUtils.isNullOrEmpty(String.valueOf(dto.getId()!= null ? dto.getId() : null));
+        } throw new MessengerException("Json Contacts Model is null");
     }
 }

@@ -9,6 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -71,6 +72,8 @@ public class UsersModel {
         private String userStatus; //Enum UserStatus
         private Boolean enabled; //user Active on NotActive
 
+        private List<UsersModel> contacts;
+
         public Builder id(Long id){
             this.id = id;
             return this;
@@ -127,6 +130,11 @@ public class UsersModel {
             this.enabled = b;
             return this;
         }
+
+        public Builder contact(List<UsersModel> ct){
+            this.contacts = ct;
+            return this;
+        }
         public UsersModel build(){
             return new UsersModel(this);
         }
@@ -147,9 +155,16 @@ public class UsersModel {
         this.isVerified_cellPhone = builder.isVerified_cellPhone;
         this.userStatus = builder.userStatus;
         this.enabled = builder.enabled;
+        this.contacts = builder.contacts;
     }
 
     public static UsersDto convertToDto(UsersModel model){
+        List<UsersDto> users = new ArrayList<>();
+        if ( model.contacts != null){
+            model.contacts.forEach(C -> {
+                users.add(convertToDto(C));
+            });
+        }
         return new UsersDto.Builder()
                 .id(model.id).uuid(model.uuid)
                 .firstName(model.firstName).lastName(model.lastName)
@@ -158,6 +173,7 @@ public class UsersModel {
                 .profileImage(model.profileImage).profileName(model.profileName)
                 .isVerified_email(model.isVerified_email).isVerified_cellPhone(model.isVerified_cellPhone)
                 .userStatus(model.userStatus).enabled(model.enabled)
+                .contacts(users)
                 .build();
     }
 }

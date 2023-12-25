@@ -1,9 +1,13 @@
 package com.khanzadi.dto.Users;
 
+import com.khanzadi.dto.contacts.UserContactsDto;
 import com.khanzadi.webMessenger.modules.sql.users.entity.UsersModel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,6 +30,8 @@ public class UsersDto {
     private String userStatus; //Enum UserStatus
     private Boolean enabled; //user Active on NotActive
 
+    private List<UsersDto> contacts;
+
     public static class Builder{
         private Long id;
 
@@ -43,6 +49,8 @@ public class UsersDto {
         private Boolean isVerified_cellPhone;
         private String userStatus; //Enum UserStatus
         private Boolean enabled; //user Active on NotActive
+
+        private List<UsersDto> contacts;
 
         public Builder id(Long id){
             this.id = id;
@@ -100,6 +108,10 @@ public class UsersDto {
             this.enabled = b;
             return this;
         }
+        public Builder contacts(List<UsersDto> ct){
+            this.contacts = ct;
+            return this;
+        }
         public UsersDto build(){
             return new UsersDto(this);
         }
@@ -120,9 +132,16 @@ public class UsersDto {
         this.isVerified_cellPhone = builder.isVerified_cellPhone;
         this.userStatus = builder.userStatus;
         this.enabled = builder.enabled;
+        this.contacts = builder.contacts;
     }
 
     public static UsersModel convertToEntity(UsersDto dto){
+        List<UsersModel> users = new ArrayList<>();
+        if ( dto.contacts != null || !dto.contacts.isEmpty()){
+            dto.contacts.forEach(C -> {
+                users.add(convertToEntity(C));
+            });
+        }
         return new UsersModel.Builder()
                 .id(dto.id).uuid(dto.uuid)
                 .firstName(dto.firstName).lastName(dto.lastName)
@@ -131,6 +150,7 @@ public class UsersDto {
                 .profileImage(dto.profileImage).profileName(dto.profileName)
                 .isVerified_email(dto.isVerified_email).isVerified_cellPhone(dto.isVerified_cellPhone)
                 .userStatus(dto.userStatus).enabled(dto.enabled)
+                .contact(users)
                 .build();
     }
 }

@@ -71,27 +71,27 @@ public class UsersController {
     //--------------------------------------------------------------------------------
     //addContact
     @PostMapping(MS_ADD_CONTACT)
-    public ResponseEntity<ResultsServiceDto> registerContact(@PathVariable(value = "identity") String identity ,
+    public ResponseEntity<ResultsServiceDto> addContactToUserContactList(@PathVariable(value = "identity") String identity ,
                                                              @RequestParam(
                                                                      value = "idenityType" ,
                                                                      defaultValue = "PHONE_NUMBER"
                                                              ) IdentityType identityType ,
                                                              @RequestBody UserContactsDto contacts) throws MessengerException{
-
+        return ResponseEntity.status(200).body(service.addContactToUserContactList(identity, identityType, contacts));
     }
     //editeContact
     @PutMapping(MS_EDIT_CONTACT)
-    public ResponseEntity<ResultsServiceDto> registerContact(@PathVariable(value = "identity") String identity ,
+    public ResponseEntity<ResultsServiceDto> editContactAtUserContactList(@PathVariable(value = "identity") String identity ,
                                                              @RequestParam(
                                                                      value = "idenityType" ,
                                                                      defaultValue = "PHONE_NUMBER"
                                                              ) IdentityType identityType ,
                                                              @RequestBody UserContactsDto contacts) throws MessengerException{
-
+        return ResponseEntity.status(200).body(service.editContactAtUserContactList());
     }
     //deleteContact
     @DeleteMapping(MS_DELETE_CONTACT)
-    public ResponseEntity<ResultsServiceDto> registerContact(@PathVariable(value = "identity") String identity ,
+    public ResponseEntity<ResultsServiceDto> deleteContactAtUserContactList(@PathVariable(value = "identity") String identity ,
                                                              @RequestParam(
                                                                      value = "idenityType" ,
                                                                      defaultValue = "PHONE_NUMBER"
@@ -101,16 +101,16 @@ public class UsersController {
                                                                      value = "idenityTypeC" ,
                                                                      defaultValue = "PHONE_NUMBER"
                                                              ) IdentityType identityTypeC ){
-
+        return ResponseEntity.status(200).body(service.deleteContactAtUserContactList());
     }
     //Find One Contact's user
     @GetMapping(MS_FIND_CONTACT)
-    public ResponseEntity<ResultsServiceDto> registerContact(){
-
+    public ResponseEntity<ResultsServiceDto> findContactAtUserContactList(){
+        return ResponseEntity.status(200).body(service.findContactAtUserContactList());
     }
     //Find All OF Contacts User
     @GetMapping(MS_FIND_ALL_CONTACTS)
-    public ResponseEntity<ResultsServiceDto> registerContact(){
-
+    public ResponseEntity<ResultsServiceDto> findAllContactAtContactList(){
+        return ResponseEntity.status(200).body(service.findAllContactAtContactList());
     }
 }

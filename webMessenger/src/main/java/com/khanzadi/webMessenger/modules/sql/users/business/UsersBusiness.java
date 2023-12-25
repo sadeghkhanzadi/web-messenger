@@ -2,11 +2,13 @@ package com.khanzadi.webMessenger.modules.sql.users.business;
 
 import com.khanzadi.dto.ResultsServiceDto;
 import com.khanzadi.dto.Users.UsersDto;
+import com.khanzadi.dto.contacts.UserContactsDto;
 import com.khanzadi.enums.IdentityType;
 import com.khanzadi.exeption.MessengerException;
 import com.khanzadi.utils.StringUtils;
 import com.khanzadi.utils.VerifyObjectUtils;
 import com.khanzadi.webMessenger.modules.sql.users.DAO.UserDao;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -108,34 +110,93 @@ public class UsersBusiness {
         if (!identityIsText){
             throw new MessengerException("Identity is null Or Empty " + "identity: " + identity);
         }
-
+        UsersDto dto = null;
         switch (identityType) {
             case ID -> {
-                return this.dao.findOneUserById(Long.valueOf(identity));
+                dto = this.dao.findOneUserById(Long.valueOf(identity));
             }
             case EMAIL -> {
                 //todo
             }
             case USER_NAME -> {
-                return this.dao.findOneUserByUsername(identity);
+                dto = this.dao.findOneUserByUsername(identity);
             }
             case PHONE_NUMBER -> {
-                return this.dao.findOneUserByCellPhone(identity);
+                dto = this.dao.findOneUserByCellPhone(identity);
             }
             default -> {
                 throw new MessengerException("IdentityType is Not valid or Empty " + "identityType: " + identityType);
             }
         }
-        return null;
+        if (dto == null){
+            throw new MessengerException("User not Exists Or UserId NotFound");
+        }
+        return dto;
+    }
+
+    public UsersDto findUserDto(UserContactsDto contacts) throws MessengerException{
+        VerifyObjectUtils.isNewContact(contacts);
+        UsersDto dto = null;
+        if (contacts.getId() != null){
+            dto = this.dao.findOneUserById(contacts.getId());
+        } else if (contacts.getEmail() != null){
+            dto = this.dao.findOneUserById(contacts.getId());
+        } else if (contacts.getCellPhone() != null){
+            dto = this.dao.findOneUserById(contacts.getId());
+        } else if (contacts.getUsername() != null){
+            dto = this.dao.findOneUserById(contacts.getId());
+        } else if (contacts.getContactName() != null){
+            dto = this.dao.findOneUserById(contacts.getId());
+        } else {
+          throw new MessengerException("Not Exists Match Fields");
+        }
+        if (dto == null){
+            throw new MessengerException("Contacts Not Found");
+        }
+        return dto;
     }
 
     public Boolean isExistsUser(Long id) throws MessengerException {
         return this.dao.isExistsUser(id);
     }
 
+    //--------------------------------------------------------------------------------
+    //-------------------------------------contact------------------------------------
+    //--------------------------------------------------------------------------------
+
     //addContact
-    //editeContact
+    public ResultsServiceDto addContactToUserContactList(String identity , IdentityType identityType,
+                                                         UserContactsDto contacts) throws MessengerException {
+        boolean identityIsText  = StringUtils.hasText(identity);
+        if (!identityIsText){
+            throw new MessengerException("Identity is null Or Empty " + "identity: " + identity);
+        }
+
+        VerifyObjectUtils.isNewContact(contacts);
+        VerifyObjectUtils.requireNonNull(identity , "identity");
+        VerifyObjectUtils.requireNonNull(identityType , "identityType");
+
+        UsersDto userDto = findUserDto(identity , identityType);
+        UsersDto userContactsDto = findUserDto(contacts);
+        userDto.getContacts().add(userContactsDto);
+
+        UsersDto dto = this.dao.addContactToUserContactList(UsersDto.convertToEntity(userDto));
+        return new ResultsServiceDto(dto);
+    }
+    //editContact
+    public ResultsServiceDto editContactAtUserContactList(){
+
+    }
     //deleteContact
+    public ResultsServiceDto deleteContactAtUserContactList(){
+
+    }
     //Find One Contact's user
+    public ResultsServiceDto findContactAtUserContactList(){
+
+    }
     //Find All OF Contacts User
+    public ResultsServiceDto findAllContactAtContactList(){
+
+    }
 }
