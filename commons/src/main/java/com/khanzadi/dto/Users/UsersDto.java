@@ -1,18 +1,21 @@
 package com.khanzadi.dto.Users;
 
 import com.khanzadi.dto.contacts.UserContactsDto;
+import com.khanzadi.exeption.MessengerException;
 import com.khanzadi.webMessenger.modules.sql.users.entity.UsersModel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class UsersDto {
+public class UsersDto implements Comparable<UsersDto>{
     private Long id;
 
     private String uuid;
@@ -31,6 +34,26 @@ public class UsersDto {
     private Boolean enabled; //user Active on NotActive
 
     private List<UsersDto> contacts;
+
+    public boolean isExists(UsersDto userContactsDto) throws MessengerException {
+        if (userContactsDto != null){
+            for (UsersDto D : contacts){
+                if (D.equals(userContactsDto)){
+                    return true;
+                }
+            }
+            return false;
+        } throw new MessengerException("Contacts is Not Exists!");
+    }
+
+    public List<UsersDto> removeContact(UsersDto usersDto) throws MessengerException {
+        try {
+            contacts.remove(usersDto);
+        } catch (Exception e){
+            throw new MessengerException("Service Error");
+        }
+        return contacts;
+    }
 
     public static class Builder{
         private Long id;
@@ -152,5 +175,26 @@ public class UsersDto {
                 .userStatus(dto.userStatus).enabled(dto.enabled)
                 .contact(users)
                 .build();
+    }
+
+    @Override
+    public int compareTo(UsersDto other) {
+        return Comparator.comparing(UsersDto::getUsername)
+                .thenComparing(UsersDto::getFirstName)
+                .thenComparing(UsersDto::getLastName)
+                .compare(this, other);
+    }
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof UsersDto))
+            return false;
+
+        UsersDto other = (UsersDto) obj;
+
+        return this.compareTo(other) == 0;
+    }
+    @Override
+    public int hashCode() {
+        return Objects.hash(username, firstName, lastName);
     }
 }

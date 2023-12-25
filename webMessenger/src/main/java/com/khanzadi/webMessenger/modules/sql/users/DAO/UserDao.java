@@ -127,7 +127,7 @@ public class UserDao {
         this.repo.s
     }
     //editContact
-    public UsersDto editContactAtUserContactList(){
+    public UsersDto editContactAtUserContactList(UsersModel usersModel){
 
     }
     //deleteContact

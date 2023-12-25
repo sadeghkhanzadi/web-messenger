@@ -87,7 +87,7 @@ public class UsersController {
                                                                      defaultValue = "PHONE_NUMBER"
                                                              ) IdentityType identityType ,
                                                              @RequestBody UserContactsDto contacts) throws MessengerException{
-        return ResponseEntity.status(200).body(service.editContactAtUserContactList());
+        return ResponseEntity.status(200).body(service.editContactAtUserContactList(identity, identityType, contacts));
     }
     //deleteContact
     @DeleteMapping(MS_DELETE_CONTACT)

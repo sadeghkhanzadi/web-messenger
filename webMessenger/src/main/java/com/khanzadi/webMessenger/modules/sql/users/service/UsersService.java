@@ -41,8 +41,9 @@ public class UsersService {
         return this.business.addContactToUserContactList(identity , identityType, contacts);
     }
     //editContact
-    public ResultsServiceDto editContactAtUserContactList(){
-        return this.business.editContactAtUserContactList();
+    public ResultsServiceDto editContactAtUserContactList(String identity , IdentityType identityType,
+                                                          UserContactsDto contacts) throws MessengerException {
+        return this.business.editContactAtUserContactList(identity , identityType, contacts);
     }
     //deleteContact
     public ResultsServiceDto deleteContactAtUserContactList(){

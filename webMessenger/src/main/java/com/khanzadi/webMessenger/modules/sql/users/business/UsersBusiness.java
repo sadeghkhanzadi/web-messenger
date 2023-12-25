@@ -184,8 +184,25 @@ public class UsersBusiness {
         return new ResultsServiceDto(dto);
     }
     //editContact
-    public ResultsServiceDto editContactAtUserContactList(){
+    public ResultsServiceDto editContactAtUserContactList(String identity , IdentityType identityType,
+                                                          UserContactsDto contacts) throws MessengerException {
+        boolean identityIsText  = StringUtils.hasText(identity);
+        if (!identityIsText){
+            throw new MessengerException("Identity is null Or Empty " + "identity: " + identity);
+        }
 
+        VerifyObjectUtils.isNewContact(contacts);
+        VerifyObjectUtils.requireNonNull(identity , "identity");
+        VerifyObjectUtils.requireNonNull(identityType , "identityType");
+
+        UsersDto userContactsDto = findUserDto(contacts);
+        UsersDto userDto = findUserDto(identity , identityType);
+        if (userDto.isExists(userContactsDto)){
+            userDto.removeContact(userContactsDto);
+        }
+
+        UsersDto dto = this.dao.editContactAtUserContactList(UsersDto.convertToEntity(userDto));
+        return new ResultsServiceDto(dto);
     }
     //deleteContact
     public ResultsServiceDto deleteContactAtUserContactList(){
