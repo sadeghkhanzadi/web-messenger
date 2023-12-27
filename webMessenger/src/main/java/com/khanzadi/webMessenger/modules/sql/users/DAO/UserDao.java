@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -123,23 +124,35 @@ public class UserDao {
     //--------------------------------------------------------------------------------
 
     //addContact
-    public UsersDto addContactToUserContactList(UsersModel user){
-        this.repo.s
+    @Transactional
+    public UsersDto addContactToUserContactList(UsersModel user) throws MessengerException {
+        try {
+            UsersModel model = this.repo.saveAndFlush(user);
+            return UsersModel.convertToDto(model);
+        } catch (Exception e){
+            throw new MessengerException(e.getMessage());
+        }
     }
-    //editContact
-    public UsersDto editContactAtUserContactList(UsersModel usersModel){
 
-    }
+    //todo editContact
+
     //deleteContact
-    public Boolean deleteContactAtUserContactList(UsersModel usersModel){
-
+    @Transactional
+    public void deleteContactAtUserContactList(UsersModel user) throws MessengerException {
+        try {
+            UsersModel model = this.repo.saveAndFlush(user);
+        } catch (Exception e){
+            throw new MessengerException(e.getMessage());
+        }
     }
     //Find One Contact's user
     public UsersDto findContactAtUserContactList(){
-
+        //todo
+        return new UsersDto();
     }
     //Find All OF Contacts User
     public List<UsersDto> findAllContactAtContactList(){
-
+        //todo
+        return new ArrayList<UsersDto>();
     }
 }

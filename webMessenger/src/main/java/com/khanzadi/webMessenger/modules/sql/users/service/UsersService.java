@@ -30,6 +30,10 @@ public class UsersService {
     public ResultsServiceDto editUser(String identity , IdentityType identityType , UsersDto usersDto) throws MessengerException {
         return this.business.editUser(identity , identityType , usersDto);
     }
+    //editPassword
+    public ResultsServiceDto editPassword(String identity , IdentityType identityType , UsersDto usersDto) throws MessengerException {
+        return this.business.editPassword(identity , identityType , usersDto);
+    }
     //findUser
     public ResultsServiceDto findUser(String identity , IdentityType identityType) throws MessengerException {
         return this.business.findUser(identity,identityType);
@@ -48,11 +52,12 @@ public class UsersService {
         return this.business.deleteContactAtUserContactList(identity , identityType , identityC , identityTypeC);
     }
     //Find One Contact's user
-    public ResultsServiceDto findContactAtUserContactList(){
-        return this.business.findContactAtUserContactList();
+    public ResultsServiceDto findContactAtUserContactList(String identity , IdentityType identityType,
+                                                          String identityC , IdentityType identityTypeC) throws MessengerException {
+        return this.business.findContactAtUserContactList(identity , identityType , identityC , identityTypeC);
     }
     //Find All OF Contacts User
-    public ResultsServiceDto findAllContactAtContactList(){
-        return this.business.findAllContactAtContactList();
+    public ResultsServiceDto findAllContactAtContactList(String identity , IdentityType identityType) throws MessengerException {
+        return this.business.findAllContactAtContactList(identity , identityType);
     }
 }

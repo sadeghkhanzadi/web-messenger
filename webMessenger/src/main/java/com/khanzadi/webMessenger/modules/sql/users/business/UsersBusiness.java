@@ -61,7 +61,9 @@ public class UsersBusiness {
             throw new MessengerException("Identity is null Or Empty " + "identity: " + identity);
         }
 
-        VerifyObjectUtils.isNewUsers(usersDto);
+        if(VerifyObjectUtils.isNewUsers(usersDto)){
+           throw new MessengerException("Please Check user dto model , user id is null");
+        }
         VerifyObjectUtils.requireNonNull(identity , "identity");
         VerifyObjectUtils.requireNonNull(identityType , "identityType");
 
@@ -70,7 +72,29 @@ public class UsersBusiness {
             throw new MessengerException("User not Exists Or UserId NotFound");
         }
 
-        UsersDto dto = this.dao.editUser(UsersDto.convertToEntity(userDto));
+        UsersDto dto = this.dao.editUser(UsersDto.convertToEntity(usersDto));
+        return new ResultsServiceDto(dto);
+    }
+    //editPassword
+    public ResultsServiceDto editPassword(String identity , IdentityType identityType , UsersDto usersDto) throws MessengerException {
+        boolean identityIsText  = StringUtils.hasText(identity);
+        if (!identityIsText){
+            throw new MessengerException("Identity is null Or Empty " + "identity: " + identity);
+        }
+
+        if(VerifyObjectUtils.isNewUsers(usersDto)){
+            throw new MessengerException("Please Check user dto model , user id is null");
+        }
+
+        VerifyObjectUtils.requireNonNull(identity , "identity");
+        VerifyObjectUtils.requireNonNull(identityType , "identityType");
+
+        UsersDto userDto = findUserDtoByIdentity(identity , identityType);
+        if (userDto == null) {
+            throw new MessengerException("User is not Exist Or UserId NotFound");
+        }
+
+        UsersDto dto = this.dao.editUser(UsersDto.convertToEntity(usersDto));
         return new ResultsServiceDto(dto);
     }
     //findUser
@@ -204,15 +228,44 @@ public class UsersBusiness {
         if (userDto.isExists(userContactsDto)){
             userDto.removeContact(userContactsDto);
         }
-        Boolean B = this.dao.deleteContactAtUserContactList(UsersDto.convertToEntity(userDto));
-        return new ResultsServiceDto(B);
+        this.dao.deleteContactAtUserContactList(UsersDto.convertToEntity(userDto));
+        return new ResultsServiceDto("true");
     }
     //Find One Contact's user
-    public ResultsServiceDto findContactAtUserContactList(){
+    public ResultsServiceDto findContactAtUserContactList(String identity , IdentityType identityType,
+                                                          String identityC , IdentityType identityTypeC) throws MessengerException {
+        VerifyObjectUtils.requireNonNull(identity , "identity");
+        VerifyObjectUtils.requireNonNull(identityType , "identityType");
+        VerifyObjectUtils.requireNonNull(identityC , "identityContact");
+        VerifyObjectUtils.requireNonNull(identityTypeC , "identityTypeContact");
+        boolean identityIsText  = StringUtils.hasText(identity);
+        boolean identityCIsText  = StringUtils.hasText(identityC);
+        if (!identityIsText){
+            throw new MessengerException("Identity is null Or Empty " + "identity: " + identity);
+        }
 
+        if (!identityCIsText){
+            throw new MessengerException("Identity is null Or Empty " + "identityContact: " + identityC);
+        }
+        UsersDto userDto = findUserDtoByIdentity(identity , identityType);
+        UsersDto userContactsDto = findUserDtoByIdentity(identityC , identityTypeC);
+        if (userDto.isExists(userContactsDto)){
+            return new ResultsServiceDto(userContactsDto);
+        }
+        throw new MessengerException("Contact With identity : " + identityC + " is not Exist!");
     }
     //Find All OF Contacts User
-    public ResultsServiceDto findAllContactAtContactList(){
-
+    public ResultsServiceDto findAllContactAtContactList(String identity , IdentityType identityType) throws MessengerException {
+        VerifyObjectUtils.requireNonNull(identity , "identity");
+        VerifyObjectUtils.requireNonNull(identityType , "identityType");
+        boolean identityIsText  = StringUtils.hasText(identity);
+        if (!identityIsText){
+            throw new MessengerException("Identity is null Or Empty " + "identity: " + identity);
+        }
+        UsersDto userDto = findUserDtoByIdentity(identity , identityType);
+        if (userDto.getContacts() != null){
+            return new ResultsServiceDto(userDto.getContacts());
+        }
+        throw new MessengerException("Contacts With identity : " + identity + " are not Exists!");
     }
 }

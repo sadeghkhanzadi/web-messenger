@@ -3,6 +3,7 @@ package com.khanzadi.constans;
 public class UriConstants {
     public static final String MS_REGISTER_USER = "/users/register/{identity}"; //post
     public static final String MS_EDIT_USER = "/users/edit/{identity}"; //put
+    public static final String MS_EDIT_PASSWORD = "/users/edit/password/{identity}"; //put
     public static final String MS_DELETE_USER = "/users/delete/{identity}"; //delete
     public static final String MS_FIND_USER = "/users/find/{identity}"; //get
 

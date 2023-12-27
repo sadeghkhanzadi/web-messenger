@@ -35,7 +35,7 @@ public class UsersDto implements Comparable<UsersDto>{
     private String password;
     private Boolean isVerified_email;
     private Boolean isVerified_cellPhone;
-    private String userStatus; //Enum UserStatus
+    private String userStatus; //Enum UserStatus offline online onWork ...
     private Boolean enabled; //user Active on NotActive
 
     private List<UsersDto> contacts;

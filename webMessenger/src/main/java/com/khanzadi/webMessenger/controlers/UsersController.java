@@ -1,7 +1,10 @@
 package com.khanzadi.webMessenger.controlers;
 
 import com.khanzadi.dto.ResultsServiceDto;
+import com.khanzadi.dto.Users.UsersAddDto;
 import com.khanzadi.dto.Users.UsersDto;
+import com.khanzadi.dto.Users.UsersEditDto;
+import com.khanzadi.dto.Users.UsersEditPasswordDto;
 import com.khanzadi.dto.contacts.UserContactsDto;
 import com.khanzadi.enums.IdentityType;
 import com.khanzadi.exeption.MessengerException;
@@ -32,8 +35,8 @@ public class UsersController {
                                                                   value = "idenityType" ,
                                                                   defaultValue = "PHONE_NUMBER"
                                                           ) IdentityType identityType ,
-                                                          @RequestBody UsersDto users) throws MessengerException {
-        return ResponseEntity.status(200).body(service.registerUser(identity,identityType,users));
+                                                          @RequestBody UsersAddDto users) throws MessengerException {
+        return ResponseEntity.status(200).body(service.registerUser(identity,identityType,UsersAddDto.convertToUsersDto(users)));
     }
 
     //editUser @FormParam @PathParam
@@ -43,9 +46,21 @@ public class UsersController {
                                                               value = "idenityType" ,
                                                               defaultValue = "PHONE_NUMBER"
                                                       ) IdentityType identityType ,
-                                                      @RequestBody UsersDto users) throws MessengerException {
-        return ResponseEntity.status(200).body(service.editUser(identity,identityType,users));
+                                                      @RequestBody UsersEditDto users) throws MessengerException {
+        return ResponseEntity.status(200).body(service.editUser(identity,identityType,UsersEditDto.convertToUsersDto(users)));
     }
+
+    //Edit Password
+    @PutMapping(MS_EDIT_PASSWORD)
+    public ResponseEntity<ResultsServiceDto> editPassword(@PathVariable(value = "identity") String identity ,
+                                                      @RequestParam(
+                                                              value = "idenityType" ,
+                                                              defaultValue = "PHONE_NUMBER"
+                                                      ) IdentityType identityType ,
+                                                      @RequestBody UsersEditPasswordDto users) throws MessengerException {
+        return ResponseEntity.status(200).body(service.editPassword(identity,identityType,UsersEditPasswordDto.convertToUsersDto(users)));
+    }
+
 
     //deleteUser @FormParam @PathParam
     @DeleteMapping(MS_DELETE_USER)
@@ -97,12 +112,25 @@ public class UsersController {
     }
     //Find One Contact's user
     @GetMapping(MS_FIND_CONTACT)
-    public ResponseEntity<ResultsServiceDto> findContactAtUserContactList(){
-        return ResponseEntity.status(200).body(service.findContactAtUserContactList());
+    public ResponseEntity<ResultsServiceDto> findContactAtUserContactList(@PathVariable(value = "identity") String identity ,
+                                                                          @RequestParam(
+                                                                                  value = "idenityType" ,
+                                                                                  defaultValue = "PHONE_NUMBER"
+                                                                          ) IdentityType identityType ,
+                                                                          @PathVariable(value = "identityC") String identityC ,
+                                                                          @RequestParam(
+                                                                                  value = "idenityTypeC" ,
+                                                                                  defaultValue = "PHONE_NUMBER"
+                                                                          ) IdentityType identityTypeC ) throws MessengerException {
+        return ResponseEntity.status(200).body(service.findContactAtUserContactList(identity, identityType, identityC , identityTypeC));
     }
     //Find All OF Contacts User
     @GetMapping(MS_FIND_ALL_CONTACTS)
-    public ResponseEntity<ResultsServiceDto> findAllContactAtContactList(){
-        return ResponseEntity.status(200).body(service.findAllContactAtContactList());
+    public ResponseEntity<ResultsServiceDto> findAllContactAtContactList(@PathVariable(value = "identity") String identity ,
+                                                                         @RequestParam(
+                                                                                 value = "idenityType" ,
+                                                                                 defaultValue = "PHONE_NUMBER"
+                                                                         ) IdentityType identityType ) throws MessengerException {
+        return ResponseEntity.status(200).body(service.findAllContactAtContactList(identity, identityType));
     }
 }
