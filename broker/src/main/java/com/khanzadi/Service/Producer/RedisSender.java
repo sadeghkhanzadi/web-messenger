@@ -1,5 +1,7 @@
 package com.khanzadi.Service.Producer;
 
+import com.khanzadi.dto.message.MessageDto;
+import com.khanzadi.exeption.MessengerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +19,12 @@ public class RedisSender {
     @Autowired
     private ChannelTopic topic;
 
-    public void sendDataToRedisQueue(String input) {
-        redisTemplate.convertAndSend(topic.getTopic(), input);
-        LOGGER.info("Data - " + input + " sent through Redis Topic - " + topic.getTopic());
+    public void sendDataToRedisQueue(MessageDto input) throws MessengerException {
+        try {
+            redisTemplate.convertAndSend(topic.getTopic(), input);
+            LOGGER.info("Data - " + input + " sent through Redis Topic - " + topic.getTopic());
+        } catch (Exception e){
+            throw new MessengerException(e.getMessage());
+        }
     }
 }

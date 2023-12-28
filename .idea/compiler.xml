@@ -7,7 +7,7 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="brocker" />
+        <module name="broker" />
         <module name="commons" />
         <module name="webMessenger" />
       </profile>
@@ -15,7 +15,7 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="brocker" options="-parameters" />
+      <module name="broker" options="-parameters" />
       <module name="commons" options="-parameters" />
       <module name="webMessenger" options="-parameters" />
     </option>

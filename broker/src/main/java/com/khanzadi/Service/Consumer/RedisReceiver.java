@@ -7,10 +7,9 @@ import org.springframework.data.redis.connection.MessageListener;
 import org.springframework.stereotype.Service;
 
 @Service
-public class RedisReciever implements MessageListener {
+public class RedisReceiver implements MessageListener {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(RedisReciever.class);
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(RedisReceiver.class);
     @Override
     public void onMessage(Message message, byte[] pattern) {
         // TODO Auto-generated method stub

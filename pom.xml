@@ -26,7 +26,7 @@
     <modules>
         <module>webMessenger</module>
         <module>commons</module>
-        <module>brocker</module>
+        <module>broker</module>
     </modules>
 
     <dependencies>

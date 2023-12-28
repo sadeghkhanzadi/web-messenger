@@ -2,7 +2,6 @@ package com.khanzadi.webMessenger.controlers;
 
 import com.khanzadi.dto.ResultsServiceDto;
 import com.khanzadi.dto.Users.UsersAddDto;
-import com.khanzadi.dto.Users.UsersDto;
 import com.khanzadi.dto.Users.UsersEditDto;
 import com.khanzadi.dto.Users.UsersEditPasswordDto;
 import com.khanzadi.dto.contacts.UserContactsDto;

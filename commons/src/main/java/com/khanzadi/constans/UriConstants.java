@@ -13,4 +13,10 @@ public class UriConstants {
     public static final String MS_FIND_CONTACT = "/users/{identity}/contact/{identityC}/find/one"; //GET ONE
     public static final String MS_FIND_ALL_CONTACTS = "/users/{identity}/contact/find/all"; //GET ALL
 
+    //broker uri
+    //Messages
+    public static final String MS_RECEIVER_MESSAGE = "/queue/srv/message/get";
+    public static final String MS_SENDER_MESSAGE = "/queue/srv/message/send";
+
+
 }

@@ -1,6 +1,6 @@
 package com.khanzadi.RedisConfiguration;
 
-import com.khanzadi.Service.Consumer.RedisReciever;
+import com.khanzadi.Service.Consumer.RedisReceiver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
@@ -28,7 +28,7 @@ public class RedisConfiguration {
         template.setConnectionFactory(connectionFactory());
         template.setValueSerializer(new GenericToStringSerializer<String>(String.class));
         return template;
-    };
+    }
 
     @Bean
     ChannelTopic topic() {
@@ -39,7 +39,7 @@ public class RedisConfiguration {
     RedisMessageListenerContainer redisContainer() {
         RedisMessageListenerContainer container = new RedisMessageListenerContainer();
         container.setConnectionFactory(connectionFactory());
-        container.addMessageListener(new MessageListenerAdapter(new RedisReciever()), topic());
+        container.addMessageListener(new MessageListenerAdapter(new RedisReceiver()), topic());
         container.setTaskExecutor(Executors.newFixedThreadPool(4));
         return container;
     }
