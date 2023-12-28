@@ -1,5 +1,6 @@
 package com.khanzadi.dto.message;
 
+import com.khanzadi.dto.Users.UsersDto;
 import lombok.*;
 
 @Getter
@@ -16,4 +17,5 @@ public class MessageDto {
     //todo image
     //todo media video audio
     private MessageDto messageDtoReply;
+    private UsersDto userReplier;
 }
